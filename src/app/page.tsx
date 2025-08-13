@@ -111,9 +111,17 @@ export default function Page() {
               min={100}
               max={1000000}
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
-              {...register("budgetUsd")}
+              {...register("budgetUsd", {
+                setValueAs: (v) => {
+                  if (v === "" || v === null || typeof v === "undefined") return undefined; // optional field
+                  const n = Number(v);
+                  return Number.isNaN(n) ? undefined : n;
+                },
+              })}
             />
-            <p role="alert" className="text-sm text-red-600">This is error</p>
+              {errors.budgetUsd?.message && (
+                <p role="alert" className="text-sm text-red-600">{errors.budgetUsd.message}</p>
+              )}           
           </div>
 
         </div>
