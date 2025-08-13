@@ -1,5 +1,5 @@
 "use client"
-
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { OnboardInput, OnboardSchema } from "./lib/validation";
@@ -13,8 +13,9 @@ export default function Page() {
     mode: "onBlur"
   });
 
-  const onsubmit = async (formData:OnboardInput) => {
+  async function onSubmit(formData: OnboardInput) {
     console.log(formData)
+
   }
 
 
@@ -30,7 +31,7 @@ export default function Page() {
 
       {/* form div */}
 
-      <form onSubmit={handleSubmit(onsubmit)} className="grid gap-4 rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
@@ -42,7 +43,9 @@ export default function Page() {
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
               {...register("fullName")}
             />
-            <p role="alert" className="text-sm text-red-600">This is error</p>
+              {errors.fullName?.message && (
+                <p role="alert" className="text-sm text-red-600">{errors.fullName.message}</p>
+              )}
           </div>
 
           <div className="space-y-1">
@@ -54,7 +57,9 @@ export default function Page() {
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
               {...register("email")}
             />
-            <p role="alert" className="text-sm text-red-600">This is error</p>
+              {errors.email?.message && (
+                <p role="alert" className="text-sm text-red-600">{errors.email.message}</p>
+              )}          
           </div>
         </div>
 
@@ -66,7 +71,9 @@ export default function Page() {
             className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
             {...register("companyName")}
           />
-          <p role="alert" className="text-sm text-red-600">This is error</p>
+              {errors.companyName?.message && (
+                <p role="alert" className="text-sm text-red-600">{errors.companyName.message}</p>
+              )}         
         </div>
 
         <div>
@@ -109,16 +116,6 @@ export default function Page() {
             <p role="alert" className="text-sm text-red-600">This is error</p>
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="budgetUsd" className="block text-sm font-medium">Project start date</label>
-            <input
-              id="projectStartDate"
-              type="date"
-              className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
-              {...register("projectStartDate")}
-            />
-            <p role="alert" className="text-sm text-red-600">This is error</p>
-          </div>
         </div>
 
         <label className="flex items-center gap-2">
