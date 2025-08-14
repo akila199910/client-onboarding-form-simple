@@ -7,15 +7,34 @@ import { submitOnboard } from "./lib/api";
 import SuccessPanel from "./components/SuccessPanel";
 import { useState } from "react";
 import ErrorAlert from "./components/ErrorAlert";
+import { useSearchParams } from "next/navigation";
 
 
 export default function Page() {
 
   const [serverError, setServerError] = useState("");
   const [successData, setSuccessData] = useState<OnboardInput | null>(null);
+  const searchParams = useSearchParams();
+  const prefillServices = searchParams
+  .getAll("service")
+  .filter((s): s is typeof SERVICES[number] =>
+    (SERVICES as readonly string[]).includes(s)
+  );
+
+  const defaultValues: Partial<OnboardInput> = {
+    fullName: searchParams.get("fullName") ?? "",
+    email: searchParams.get("email") ?? "",
+    companyName: searchParams.get("companyName") ?? "",
+    services: prefillServices.length ? prefillServices : [],
+    budgetUsd: searchParams.get("budgetUsd") ? Number(searchParams.get("budgetUsd")) : undefined,
+    projectStartDate: searchParams.get("projectStartDate") ?? "",
+    acceptTerms: false,
+  };
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(OnboardSchema),
-    mode: "onBlur"
+    mode: "onBlur",
+    defaultValues
   });
   const onSubmit = async (formData: OnboardInput) => {
     console.log(formData);
@@ -63,7 +82,7 @@ export default function Page() {
       )}
       {/* form div */}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border  bg-gray-50 p-4 shadow-sm sm:p-6">
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
