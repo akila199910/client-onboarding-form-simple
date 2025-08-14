@@ -115,7 +115,7 @@ export default function Page() {
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
               {...register("budgetUsd", {
                 setValueAs: (v) => {
-                  if (v === "" || v === null || typeof v === "undefined") return undefined; // optional field
+                  if (v === "" || v === null || typeof v === "undefined") return undefined; 
                   const n = Number(v);
                   return Number.isNaN(n) ? undefined : n;
                 },
@@ -123,6 +123,19 @@ export default function Page() {
             />
             {errors.budgetUsd?.message && (
               <p role="alert" className="text-sm text-red-600">{errors.budgetUsd.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="projectStartDate" className="block text-sm font-medium"> Project start date</label>
+            <input
+              id="projectStartDate"
+              type="date"
+              className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
+              {...register("projectStartDate")}
+            />
+            {errors.projectStartDate?.message && (
+              <p role="alert" className="text-sm text-red-600">{errors.projectStartDate.message}</p>
             )}
           </div>
 

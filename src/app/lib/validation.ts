@@ -2,6 +2,13 @@ import {z} from "zod"
 
 const fullNameRegex = /^[A-Za-z][A-Za-z\s'\-]{1,79}$/; 
 export const SERVICES = ["UI/UX", "Branding", "Web Dev", "Mobile App"] as const;
+function isOnOrAfterToday(dateStr: string) {
+  const input = new Date(dateStr + "T00:00:00");
+  const today = new Date();
+  
+  const localMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return input >= localMidnight;
+}
 
 
 export const OnboardSchema = z.object({
@@ -29,14 +36,18 @@ export const OnboardSchema = z.object({
       z.array(z.enum(SERVICES)).min(1, "Select at least one service")
     ),
 
-    budgetUsd: z
+  budgetUsd: z
     .number({ invalid_type_error: "Budget must be a number" })
     .int("Budget must be an integer")
     .min(100, "Minimum is 100")
     .max(1_000_000, "Maximum is 1,000,000")
     .optional(),
   
-    acceptTerms: z
+  projectStartDate: z
+    .string({ required_error: "Project start date is required" })
+    .refine(isOnOrAfterToday, "Start date can not past date"),
+
+  acceptTerms: z
     .boolean({
       required_error: "You must agree to the terms and conditions.",
       invalid_type_error: "You must agree to the terms and conditions.",
