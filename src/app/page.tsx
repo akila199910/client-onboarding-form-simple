@@ -3,7 +3,7 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { OnboardInput, OnboardSchema } from "./lib/validation";
-
+import { SERVICES } from "./lib/validation";
 
 
 export default function Page() {
@@ -43,9 +43,9 @@ export default function Page() {
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
               {...register("fullName")}
             />
-              {errors.fullName?.message && (
-                <p role="alert" className="text-sm text-red-600">{errors.fullName.message}</p>
-              )}
+            {errors.fullName?.message && (
+              <p role="alert" className="text-sm text-red-600">{errors.fullName.message}</p>
+            )}
           </div>
 
           <div className="space-y-1">
@@ -57,9 +57,9 @@ export default function Page() {
               className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
               {...register("email")}
             />
-              {errors.email?.message && (
-                <p role="alert" className="text-sm text-red-600">{errors.email.message}</p>
-              )}          
+            {errors.email?.message && (
+              <p role="alert" className="text-sm text-red-600">{errors.email.message}</p>
+            )}
           </div>
         </div>
 
@@ -71,42 +71,44 @@ export default function Page() {
             className="h-10 w-full rounded-lg border px-3 outline-none focus:ring-2"
             {...register("companyName")}
           />
-              {errors.companyName?.message && (
-                <p role="alert" className="text-sm text-red-600">{errors.companyName.message}</p>
-              )}         
+          {errors.companyName?.message && (
+            <p role="alert" className="text-sm text-red-600">{errors.companyName.message}</p>
+          )}
         </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium">Services interested in</label>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {SERVICES.map((service) => (
+              <label
+                key={service}
+                className="flex items-center gap-2 rounded-lg border p-2 hover:bg-gray-50"
+              >
+                <input
+                  type="checkbox"
+                  value={service}
+                  {...register("services")}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm">{service}</span>
+              </label>
+            ))}
 
-            {/* <label className="flex items-center gap-2 rounded-lg border p-2 hover:bg-gray-50">
-              <input type="checkbox" className="h-4 w-4" value= 'UI/UX' {...register()} />
-              <span className="text-sm">UI/UX</span>
-            </label>
-
-            <label className="flex items-center gap-2 rounded-lg border p-2 hover:bg-gray-50">
-              <input type="checkbox" className="h-4 w-4" />
-              <span className="text-sm">Branding</span>
-            </label>
-            <label className="flex items-center gap-2 rounded-lg border p-2 hover:bg-gray-50">
-              <input type="checkbox" className="h-4 w-4" />
-              <span className="text-sm">Web Dev</span>
-            </label>
-            <label className="flex items-center gap-2 rounded-lg border p-2 hover:bg-gray-50">
-              <input type="checkbox" className="h-4 w-4" />
-              <span className="text-sm">Mobile App</span>
-            </label>
-            <p role="alert" className="col-span-full text-sm text-red-600">Error</p> */}
+            {errors.services?.message && (
+              <p role="alert" className="col-span-full text-sm text-red-600">
+                {String(errors.services.message)}
+              </p>
+            )}
           </div>
         </div>
+
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
             <label htmlFor="budgetUsd" className="block text-sm font-medium"> Budget (USD)</label>
             <input
               id="budgetUsd"
-              type="number"
+              type="string"
               inputMode="numeric"
               min={100}
               max={1000000}
@@ -119,9 +121,9 @@ export default function Page() {
                 },
               })}
             />
-              {errors.budgetUsd?.message && (
-                <p role="alert" className="text-sm text-red-600">{errors.budgetUsd.message}</p>
-              )}           
+            {errors.budgetUsd?.message && (
+              <p role="alert" className="text-sm text-red-600">{errors.budgetUsd.message}</p>
+            )}
           </div>
 
         </div>
