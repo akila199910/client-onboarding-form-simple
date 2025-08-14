@@ -7,7 +7,6 @@ import { submitOnboard } from "./lib/api";
 import SuccessPanel from "./components/SuccessPanel";
 import { useState } from "react";
 import ErrorAlert from "./components/ErrorAlert";
-import { AxiosError } from "axios";
 
 
 export default function Page() {
@@ -22,7 +21,7 @@ export default function Page() {
     console.log(formData);
     setServerError("");
     setSuccessData(null);
-    
+
     const res = await submitOnboard(formData);
     //console.log(res.data);
     if (res.status >= 200 && res.status < 300) {

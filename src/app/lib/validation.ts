@@ -2,12 +2,17 @@ import {z} from "zod"
 
 const fullNameRegex = /^[A-Za-z][A-Za-z\s'\-]{1,79}$/; 
 export const SERVICES = ["UI/UX", "Branding", "Web Dev", "Mobile App"] as const;
-function isOnOrAfterToday(dateStr: string) {
-  const input = new Date(dateStr + "T00:00:00");
-  const today = new Date();
-  
-  const localMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  return input >= localMidnight;
+export function isOnOrAfterToday(iso: string) {
+
+  if (!iso) return false;
+  const [y, m, d] = iso.split("-").map(Number);
+  const input = new Date(y, m - 1, d);
+  input.setHours(0, 0, 0, 0);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  today.setHours(0, 0, 0, 0);
+
+  return input >= today;
 }
 
 
@@ -45,9 +50,9 @@ export const OnboardSchema = z.object({
   
   projectStartDate: z
     .string({ required_error: "Project start date is required" })
-    .refine(isOnOrAfterToday, "Start date can not past date"),
-
-  acceptTerms: z
+    .refine(isOnOrAfterToday, "Start date must be today or later"),
+    
+    acceptTerms: z
     .boolean({
       required_error: "You must agree to the terms and conditions.",
       invalid_type_error: "You must agree to the terms and conditions.",
