@@ -6,10 +6,13 @@ import { SERVICES } from "./lib/validation";
 import { submitOnboard } from "./lib/api";
 import SuccessPanel from "./components/SuccessPanel";
 import { useState } from "react";
+import ErrorAlert from "./components/ErrorAlert";
+import { AxiosError } from "axios";
 
 
 export default function Page() {
 
+  const [serverError, setServerError] = useState("");
   const [successData, setSuccessData] = useState<OnboardInput | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(OnboardSchema),
@@ -17,10 +20,11 @@ export default function Page() {
   });
   const onSubmit = async (formData: OnboardInput) => {
     console.log(formData);
+    setServerError("");
     setSuccessData(null);
+    
     const res = await submitOnboard(formData);
     //console.log(res.data);
-
     if (res.status >= 200 && res.status < 300) {
       // should be handle success status
       setSuccessData(formData); 
@@ -32,8 +36,8 @@ export default function Page() {
       if (res.data && typeof res.data === "object") {
         message = (res.data.message as string) ?? message;
       }
-    } catch (_) {
-
+    } finally {
+      setServerError(message);
     }
   };
 
@@ -46,6 +50,12 @@ export default function Page() {
         <p className="mt-1 text-sm text-gray-600 font-semibold">Technical Assessment: Client Onboarding (Next.js
           + React Hook Form + Zod)</p>
       </div>
+
+      {serverError && (
+        <div className="mb-4">
+          <ErrorAlert message={serverError} />
+        </div>
+      )}
 
       {successData && (
         <div className="mb-6">
