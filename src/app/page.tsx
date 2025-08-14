@@ -1,9 +1,9 @@
 "use client"
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { OnboardInput, OnboardSchema } from "./lib/validation";
 import { SERVICES } from "./lib/validation";
+import { submitOnboard } from "./lib/api";
 
 
 export default function Page() {
@@ -12,12 +12,26 @@ export default function Page() {
     resolver: zodResolver(OnboardSchema),
     mode: "onBlur"
   });
+  const onSubmit = async (formData: OnboardInput) => {
+    console.log(formData);
+    const res = await submitOnboard(formData);
+    console.log(res.data);
 
-  async function onSubmit(formData: OnboardInput) {
-    console.log(formData)
+    if (res.status >= 200 && res.status < 300) {
+      // should be handle success status
 
-  }
+      return;
+    }
 
+    let message = "Something went wrong. Please try again.";
+    try {
+      if (res.data && typeof res.data === "object") {
+        message = (res.data.message as string) ?? message;
+      }
+    } catch (_) {
+
+    }
+  };
 
   return (
     <main className="mx-auto max-w-3xl p-4 sm:p-6 lg:p-10">
@@ -158,9 +172,10 @@ export default function Page() {
         <div className="pt-2">
           <button
             type="submit"
+            disabled={isSubmitting}
             className="inline-flex h-10 items-center justify-center rounded-lg bg-black px-4 text-white shadow-sm transition-opacity disabled:opacity-50"
           >
-            Submit
+            {isSubmitting ? "Submitting…" : "Submit"}
           </button>
         </div>
       </form>
