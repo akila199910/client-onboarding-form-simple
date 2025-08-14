@@ -36,7 +36,14 @@ export const OnboardSchema = z.object({
     .max(1_000_000, "Maximum is 1,000,000")
     .optional(),
   
-  acceptTerms: z.literal(true, { errorMap: () => ({ message: "You must accept the terms" }) }),
+    acceptTerms: z
+    .boolean({
+      required_error: "You must agree to the terms and conditions.",
+      invalid_type_error: "You must agree to the terms and conditions.",
+    })
+    .refine((val) => val === true, {
+      message: "You must agree to the terms and conditions.",
+    }),
 });
 
 export type OnboardInput = z.infer<typeof OnboardSchema>;

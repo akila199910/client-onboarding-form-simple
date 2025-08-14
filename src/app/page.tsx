@@ -129,10 +129,18 @@ export default function Page() {
         </div>
 
         <label className="flex items-center gap-2">
-          <input type="checkbox" className="h-4 w-4" {...register("acceptTerms")} />
-          <span className="text-sm">I accept the terms</span>
-        </label>
-
+            <input
+              type="checkbox"
+              className="h-4 w-4"
+              {...register("acceptTerms", { valueAsBoolean: true })}
+            />
+            <span className="text-sm">I accept the terms</span>
+          </label>
+          {errors.acceptTerms?.message && (
+            <p role="alert" className="-mt-2 text-sm text-red-600">
+              {errors.acceptTerms.message}
+            </p>
+          )}
 
         <div className="pt-2">
           <button
