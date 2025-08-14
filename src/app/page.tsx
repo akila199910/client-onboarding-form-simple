@@ -4,22 +4,26 @@ import { useForm } from "react-hook-form";
 import { OnboardInput, OnboardSchema } from "./lib/validation";
 import { SERVICES } from "./lib/validation";
 import { submitOnboard } from "./lib/api";
+import SuccessPanel from "./components/SuccessPanel";
+import { useState } from "react";
 
 
 export default function Page() {
 
+  const [successData, setSuccessData] = useState<OnboardInput | null>(null);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(OnboardSchema),
     mode: "onBlur"
   });
   const onSubmit = async (formData: OnboardInput) => {
     console.log(formData);
+    setSuccessData(null);
     const res = await submitOnboard(formData);
-    console.log(res.data);
+    //console.log(res.data);
 
     if (res.status >= 200 && res.status < 300) {
       // should be handle success status
-
+      setSuccessData(formData); 
       return;
     }
 
@@ -43,6 +47,11 @@ export default function Page() {
           + React Hook Form + Zod)</p>
       </div>
 
+      {successData && (
+        <div className="mb-6">
+          <SuccessPanel data={successData} />
+        </div>
+      )}
       {/* form div */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
