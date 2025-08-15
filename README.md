@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Client Onboarding Form
 
-## Getting Started
+This is a small Next.js project that collects client onboarding information using React Hook Form and Zod for validation.
 
-First, run the development server:
+1 -------------Features --------------
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   * Validation: All fields validated with Zod + RHF.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   * Responsive UI: Works on mobile and desktop, accessible labels and focus states.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   * External Submit: Sends data to an external API (set in .env).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   * Error & Success Handling: Shows messages for errors and a summary on success.
 
-## Learn More
+2 ------------Bonus-------------
 
-To learn more about Next.js, take a look at the following resources:
+   * Pre-fill fields from URL query params (e.g. ?service=UI%2FUX&email=test@example.com).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   * Unit tests for the Zod schema. 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+3 ------How to Setup------
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   * Install dependencies -> npm install
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   * Set environment variable -> Create .env in the project root and set  NEXT_PUBLIC_ONBOARD_URL var like
+      NEXT_PUBLIC_ONBOARD_URL=https://example.com/api/onboard
+
+   * Run the app -> npm run dev
+
+   * Open http://localhost:3000
+
+
+4 -------------How to Use------------
+
+* Fill out the form:
+
+      Name, Email, Company
+      Choose at least one service
+      (Optional) Budget
+      Project start date (today or later)
+      Accept the terms
+      Click Submit.
+
+   If successful, you’ll see a summary of your submission.
+
+5 ------------Query Param Prefill-------------
+
+   	You can prefill fields using query params. 
+
+      Example: 
+      http://localhost:3000?fullName=Akila%20Umayanga&email=akilaumayangaw@gmail.com&companyName=Demo%20Inc&service=UI%2FUX& service=Branding&budgetUsd=500&projectStartDate=2025-08-20
+
+6 -----------------Validation Rules--------------------
+
+   * Full name: 2–80 chars, letters/spaces/apostrophes/dashes.
+   * Email: Must be valid.
+   * Company name: 2–100 chars.
+   * Services: Choose at least 1.
+   * Budget (USD): Optional integer between 100–1,000,000.
+   * Start date: Today or later.
+   * Accept terms: Must be checked.
+
+7 -----------Testing----------------
+
+   Run unit tests for the Zod schema: npm test
+
+
+8 ------------Known Notes---------------
+
+   * Make sure your API endpoint supports CORS for local testing.
+   * No file uploads required.
